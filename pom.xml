@@ -53,6 +53,18 @@
 			<artifactId>cloudinary-core</artifactId>
 			<version>1.22.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.vaadin/vaadin-spring-boot-starter -->
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-spring-boot-starter</artifactId>
+		</dependency>
+
+
 
 	</dependencies>
 

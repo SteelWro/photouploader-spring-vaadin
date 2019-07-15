@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestApi {
 
-    @GetMapping("/test1")
+    @GetMapping("/admin")
     public String test1() {
-        return "ADMIN";
+        return "ADMIN site";
     }
 
-    @GetMapping("/test2")
+    @GetMapping("/user")
     public String test2() {
-        return "USER";
+        return "USER site";
     }
 }

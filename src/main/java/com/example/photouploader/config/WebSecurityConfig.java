@@ -1,5 +1,6 @@
-package com.example.photouploader;
+package com.example.photouploader.config;
 
+import com.example.photouploader.service.UserDetailsServiceImpl;
 import com.example.photouploader.model.AppUser;
 import com.example.photouploader.repo.AppUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,11 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/test1").hasRole("ADMIN")
-                .antMatchers("/test2").hasRole("USER")
+        http.authorizeRequests()
+                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/user").hasAnyRole("ADMIN", "USER")
                 .and()
+                .csrf().disable()
                 .formLogin().permitAll();
     }
 

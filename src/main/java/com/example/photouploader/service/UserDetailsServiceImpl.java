@@ -1,4 +1,4 @@
-package com.example.photouploader;
+package com.example.photouploader.service;
 
 import com.example.photouploader.repo.AppUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
