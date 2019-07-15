@@ -18,7 +18,8 @@ public class ImageUploader {
     private ImageRepoSaver imageRepoSaver;
 
     @Autowired
-    public ImageUploader(ImageRepo imageRepo) {
+    public ImageUploader(ImageRepo imageRepo, ImageRepoSaver imageRepoSaver) {
+        this.imageRepoSaver = imageRepoSaver;
         this.imageRepo = imageRepo;
         cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", "stalowy",
