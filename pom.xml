@@ -62,7 +62,14 @@
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-spring-boot-starter</artifactId>
+			<version>13.0.11</version>
 		</dependency>
+		<dependency>
+			<groupId>org.vaadin.artur</groupId>
+			<artifactId>github-corner</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 
 
 

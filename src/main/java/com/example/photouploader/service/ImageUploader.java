@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 @Service
@@ -27,8 +28,7 @@ public class ImageUploader {
                 "api_secret", "cSSpVZRIk43ruqJ-amyJMiTor28"));
     }
 
-    public String uploadFile(String path) {
-        File file = new File(path);
+    public String uploadFile(File file) {
         Map uploadResult = null;
         try {
             uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
