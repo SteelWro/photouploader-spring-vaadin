@@ -27,17 +27,17 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Route("upload")
-@PageTitle("Upload")
-//@Secured("ROLE_ADMIN")
-public class UploadGui extends VerticalLayout{
+@Route("main")
+@PageTitle("Main")
+@Secured("ROLE_ADMIN")
+public class MainGui extends VerticalLayout{
     public static final String ROUTE = "upload";
 
     private ImageUploader imageUploader;
     private ByteConverter byteConverter;
 
     @Autowired
-    public UploadGui(ImageUploader imageUploader, ByteConverter byteConverter) {
+    public MainGui(ImageUploader imageUploader, ByteConverter byteConverter) {
         this.byteConverter = byteConverter;
         this.imageUploader = imageUploader;
 

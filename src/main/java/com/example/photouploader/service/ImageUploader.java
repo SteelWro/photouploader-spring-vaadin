@@ -29,8 +29,8 @@ public class ImageUploader {
         this.imageRepo = imageRepo;
         cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", "stalowy",
-                "api_key", "119118156638564",
-                "api_secret", "cSSpVZRIk43ruqJ-amyJMiTor28"));
+                "api_key", "934121649177224",
+                "api_secret", "u2LS_LAFt2-gfjzGM1q6vxhieAY"));
     }
 
     public String uploadFile(File file) {
@@ -38,7 +38,7 @@ public class ImageUploader {
         try {
             uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
             imageRepoSaver.saveImageToRepo(new Image(uploadResult.get("url").toString()));
-            deleteTmpFile(uploadResult.get(10).toString() + "." + uploadResult.get(1).toString());
+           // deleteTmpFile(uploadResult.get(10).toString() + "." + uploadResult.get(1).toString());
         } catch (IOException e) {
             //todo
         }
