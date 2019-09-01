@@ -2,6 +2,7 @@ package com.example.photouploader.config;
 
 import com.example.photouploader.repo.AppUserRepo;
 import com.example.photouploader.view.LoginGui;
+import com.example.photouploader.view.MainGui;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -19,8 +21,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
     private AppUserRepo appUserRepo;
-    private static final String LOGOUT_SUCCESS_URL = "/login";
-    private static final String LOGOIN_SUCCESS_URL = "/upload";
+    private static final String LOGIN_PROCESSING_URL = "/" + LoginGui.ROUTE;
+    private static final String LOGIN_FAILURE_URL = "/" + LoginGui.ROUTE;
+    private static final String LOGIN_URL = "/" + LoginGui.ROUTE;
+    private static final String LOGOUT_SUCCESS_URL = "/" + LoginGui.ROUTE;
+    private static final String LOGIN_SUCCESS_DEFAULT_URL = "/" + MainGui.ROUTE;
+
+
 
 
 //    @Autowired
@@ -59,10 +66,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Allow all requests by logged in users.
                 .anyRequest().authenticated()
 
+
                 // Configure the login page.
-                .and().formLogin().loginPage("/" + LoginGui.ROUTE).permitAll()
-                .loginProcessingUrl(LOGOIN_SUCCESS_URL)
-                .defaultSuccessUrl(LOGOIN_SUCCESS_URL)
+                .and().formLogin()
+                .loginPage(LOGIN_URL)
+                .loginProcessingUrl(LOGIN_PROCESSING_URL)
+                .defaultSuccessUrl(LOGIN_SUCCESS_DEFAULT_URL,true)
+                .failureUrl(LOGIN_FAILURE_URL)
+                //.successHandler(myAuthenticationSuccessHandler())
+                .permitAll()
                 // Configure logout
                 .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
     }
@@ -140,6 +152,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new CustomRequestCache();
     }
 
+//    @Bean
+//    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+//        return new MyAuthenticationSuccessHandler();
+//    }
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void get(){
 //        AppUser appUserUser = new AppUser("jan", passwordEncoder().encode("jan"),"USER");

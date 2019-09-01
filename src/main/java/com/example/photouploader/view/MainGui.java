@@ -27,11 +27,11 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Route("main")
+@Route(value = MainGui.ROUTE)
 @PageTitle("Main")
 @Secured("ROLE_ADMIN")
 public class MainGui extends VerticalLayout{
-    public static final String ROUTE = "upload";
+    public static final String ROUTE = "main";
 
     private ImageUploader imageUploader;
     private ByteConverter byteConverter;

@@ -35,9 +35,10 @@ public class LoginGui extends VerticalLayout {
 //            UI.getCurrent().navigate(requestCache.resolveRedirectUrl());
 //        }
         login.setOpened(true);
-        login.setTitle("Spring Secured Vaadin");
-        login.setDescription("Login Overlay Example");
-        login.setAction("upload");
+        login.setTitle("Photo Cloud");
+        login.setAction("login");
+        login.setDescription("Free cloud service for photos");
+        login.setForgotPasswordButtonVisible(false);
         add(login);
 
         login.addLoginListener(e -> {
@@ -52,7 +53,6 @@ public class LoginGui extends VerticalLayout {
                 if(authReq != null ) {
                     login.close();
                     SecurityContextHolder.getContext().setAuthentication(authReq);
-                    UI.getCurrent().navigate(requestCache.resolveRedirectUrl());
                 }
 
             } catch (AuthenticationException ex) {
