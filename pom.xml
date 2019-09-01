@@ -47,7 +47,6 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.cloudinary/cloudinary-core -->
 		<dependency>
 			<groupId>com.cloudinary</groupId>
 			<artifactId>cloudinary-core</artifactId>
@@ -58,20 +57,11 @@
 			<artifactId>cloudinary-http44</artifactId>
 			<version>RELEASE</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.vaadin/vaadin-spring-boot-starter -->
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-spring-boot-starter</artifactId>
-			<version>13.0.11</version>
+			<version>13.0.1</version>
 		</dependency>
-		<dependency>
-			<groupId>org.vaadin.artur</groupId>
-			<artifactId>github-corner</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-
-
-
 
 	</dependencies>
 
