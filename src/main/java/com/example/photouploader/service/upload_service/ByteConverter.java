@@ -1,4 +1,4 @@
-package com.example.photouploader.service;
+package com.example.photouploader.service.upload_service;
 
 import com.vaadin.flow.component.upload.SucceededEvent;
 import org.springframework.stereotype.Service;

@@ -16,7 +16,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 
 @Tag("sa-login-view")
@@ -44,7 +50,7 @@ public class LoginGui extends VerticalLayout {
         login.addLoginListener(e -> {
             try {
                 UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(e.getUsername(), e.getPassword());
-                Authentication auth = authenticationManager.authenticate(authReq);
+                final Authentication auth = authenticationManager.authenticate(authReq);
                 // try to authenticate with given credentials, should always return !null or throw an {@link AuthenticationException}
 //                final Authentication authentication = authenticationManager
 //                        .authenticate(new UsernamePasswordAuthenticationToken());
@@ -52,7 +58,12 @@ public class LoginGui extends VerticalLayout {
                 // if authentication was successful we will update the security context and redirect to the page requested first
                 if(authReq != null ) {
                     login.close();
-                    SecurityContextHolder.getContext().setAuthentication(authReq);
+                    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+                    SecurityContext securityContext = SecurityContextHolder.getContext();
+                    securityContext.setAuthentication(authReq);
+                    HttpSession session = request.getSession(true);
+                    session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+
                 }
 
             } catch (AuthenticationException ex) {

@@ -1,52 +1,46 @@
 package com.example.photouploader.view;
 
-import com.example.photouploader.service.ByteConverter;
-import com.example.photouploader.service.ImageUploader;
+import com.example.photouploader.service.upload_service.ByteConverter;
+import com.example.photouploader.service.upload_service.ImageUploaderService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.component.upload.SucceededEvent;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Route(value = MainGui.ROUTE)
-@PageTitle("Main")
+@Route(value = AdminGui.ROUTE)
+@PageTitle("Admin Page")
 @Secured("ROLE_ADMIN")
-public class MainGui extends VerticalLayout{
-    public static final String ROUTE = "main";
+public class AdminGui extends VerticalLayout{
+    public static final String ROUTE = "adminis";
 
-    private ImageUploader imageUploader;
+    private ImageUploaderService imageUploaderService;
     private ByteConverter byteConverter;
 
     @Autowired
-    public MainGui(ImageUploader imageUploader, ByteConverter byteConverter) {
+    public AdminGui(ImageUploaderService imageUploaderService, ByteConverter byteConverter) {
         this.byteConverter = byteConverter;
-        this.imageUploader = imageUploader;
+        this.imageUploaderService = imageUploaderService;
 
         MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
         Upload upload = new Upload(buffer);
 
         upload.addSucceededListener(event -> {
             byteConverter.byteArrayToFile(buffer.getOutputBuffer(event.getFileName()), event);
-            imageUploader.uploadFile(new File(event.getFileName()));
+            imageUploaderService.uploadFile(new File(event.getFileName()));
         });
 
         Tab tab1 = new Tab("Upload");

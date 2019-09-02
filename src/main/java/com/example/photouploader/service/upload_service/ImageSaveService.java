@@ -1,4 +1,4 @@
-package com.example.photouploader.service;
+package com.example.photouploader.service.upload_service;
 
 import com.example.photouploader.model.Image;
 import com.example.photouploader.repo.ImageRepo;
@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ImageRepoSaver {
+public class ImageSaveService {
 
     ImageRepo imageRepo;
 
     @Autowired
-    public ImageRepoSaver(ImageRepo imageRepo) {
+    public ImageSaveService(ImageRepo imageRepo) {
         this.imageRepo = imageRepo;
     }
 

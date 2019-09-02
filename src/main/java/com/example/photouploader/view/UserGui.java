@@ -11,16 +11,16 @@ import org.springframework.security.access.annotation.Secured;
 import java.util.List;
 
 
-@Route(value = GalleryGui.ROUTE)
+@Route(value = UserGui.ROUTE)
 @PageTitle("Gallery")
 @Secured("ROLE_USER")
-public class GalleryGui extends VerticalLayout {
+public class UserGui extends VerticalLayout {
     public static final String ROUTE = "gallery";
 
     ImageRepo imageRepo;
 
     @Autowired
-    public GalleryGui(ImageRepo imageRepo) {
+    public UserGui(ImageRepo imageRepo) {
         this.imageRepo = imageRepo;
         List<Image> images = imageRepo.findAll();
         images.stream().forEach(element ->

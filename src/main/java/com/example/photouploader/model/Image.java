@@ -1,9 +1,6 @@
 package com.example.photouploader.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Image {
@@ -13,11 +10,19 @@ public class Image {
     private Long id;
     private String imageAddress;
 
+    @Column(name = "car_id", nullable = false)
+    private Long carId;
+
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @JoinColumn(name="user_id", insertable = false, updatable = false)
+    private User user;
+
     public Image() {
     }
 
-    public Image(String imageAddress) {
+    public Image(String imageAddress, Long carId) {
         this.imageAddress = imageAddress;
+        this.carId = carId;
     }
 
     public Long getId() {

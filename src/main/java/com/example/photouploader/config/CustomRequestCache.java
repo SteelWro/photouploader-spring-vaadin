@@ -1,7 +1,7 @@
 package com.example.photouploader.config;
 
 import com.example.photouploader.view.LoginGui;
-import com.example.photouploader.view.MainGui;
+import com.example.photouploader.view.AdminGui;
 import com.vaadin.flow.server.VaadinServletRequest;
 import com.vaadin.flow.server.VaadinServletResponse;
 import org.springframework.security.web.savedrequest.DefaultSavedRequest;
@@ -46,10 +46,10 @@ public class CustomRequestCache extends HttpSessionRequestCache {
 					return requestURI.startsWith("/") ? requestURI.substring(1) : requestURI;
 				}
 			}
-			return MainGui.ROUTE;
+			return AdminGui.ROUTE;
 		}
 		// if everything fails, redirect to the main view
-		return "main";
+		return "";
 	}
 
 }

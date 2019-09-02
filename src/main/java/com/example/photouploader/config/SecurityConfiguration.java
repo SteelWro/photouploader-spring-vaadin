@@ -1,11 +1,15 @@
 package com.example.photouploader.config;
 
-import com.example.photouploader.repo.AppUserRepo;
+import com.example.photouploader.model.User;
+import com.example.photouploader.repo.UserRepo;
 import com.example.photouploader.view.LoginGui;
-import com.example.photouploader.view.MainGui;
+import com.example.photouploader.view.AdminGui;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,28 +17,27 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
-    private AppUserRepo appUserRepo;
+    private UserRepo userRepo;
     private static final String LOGIN_PROCESSING_URL = "/" + LoginGui.ROUTE;
-    private static final String LOGIN_FAILURE_URL = "/" + LoginGui.ROUTE;
+    private static final String LOGIN_FAILURE_URL = "/" + LoginGui.ROUTE + "?errors";
     private static final String LOGIN_URL = "/" + LoginGui.ROUTE;
     private static final String LOGOUT_SUCCESS_URL = "/" + LoginGui.ROUTE;
-    private static final String LOGIN_SUCCESS_DEFAULT_URL = "/" + MainGui.ROUTE;
+    private static final String LOGIN_SUCCESS_DEFAULT_URL = "/" + AdminGui.ROUTE;
 
 
-
-
-//    @Autowired
-//    public SecurityConfiguration(UserDetailsService userDetailsService, AppUserRepo appUserRepo) {
-//        this.userDetailsService = userDetailsService;
-//        this.appUserRepo = appUserRepo;
-//    }
+    @Autowired
+    public SecurityConfiguration(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, UserRepo userRepo) {
+        this.userDetailsService = userDetailsService;
+        this.userRepo = userRepo;
+    }
 
 //    @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -66,9 +69,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Allow all requests by logged in users.
                 .anyRequest().authenticated()
 
+                .and().userDetailsService(userDetailsService)
 
                 // Configure the login page.
-                .and().formLogin()
+                .formLogin()
                 .loginPage(LOGIN_URL)
                 .loginProcessingUrl(LOGIN_PROCESSING_URL)
                 .defaultSuccessUrl(LOGIN_SUCCESS_DEFAULT_URL,true)
@@ -156,12 +160,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
 //        return new MyAuthenticationSuccessHandler();
 //    }
+
 //    @EventListener(ApplicationReadyEvent.class)
 //    public void get(){
-//        AppUser appUserUser = new AppUser("jan", passwordEncoder().encode("jan"),"USER");
-//        AppUser appUserAdmin = new AppUser("admin", passwordEncoder().encode("admin"),"ADMIN");
-//        appUserRepo.save(appUserUser);
-//        appUserRepo.save(appUserAdmin);
+//        User appUserUser = new User("jan", passwordEncoder().encode("jan"),"ROLE_USER");
+//        User appUserAdmin = new User("admin", passwordEncoder().encode("admin"),"ROLE_ADMIN");
+//        userRepo.save(appUserUser);
+//        userRepo.save(appUserAdmin);
 //    }
     //        http.authorizeRequests()
 //                .antMatchers("/admin").hasRole("ADMIN")
