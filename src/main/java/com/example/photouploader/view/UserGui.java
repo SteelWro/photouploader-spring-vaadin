@@ -7,13 +7,15 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
 
 @Route(value = UserGui.ROUTE)
 @PageTitle("Gallery")
-@Secured("ROLE_USER")
+@Secured("USER")
 public class UserGui extends VerticalLayout {
     public static final String ROUTE = "gallery";
 

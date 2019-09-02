@@ -10,8 +10,8 @@ public class Image {
     private Long id;
     private String imageAddress;
 
-    @Column(name = "car_id", nullable = false)
-    private Long carId;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(name="user_id", insertable = false, updatable = false)
@@ -20,9 +20,9 @@ public class Image {
     public Image() {
     }
 
-    public Image(String imageAddress, Long carId) {
+    public Image(String imageAddress, Long userId) {
         this.imageAddress = imageAddress;
-        this.carId = carId;
+        this.userId = userId;
     }
 
     public Long getId() {

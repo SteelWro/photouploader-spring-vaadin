@@ -1,12 +1,8 @@
 package com.example.photouploader.view;
 
 
-import com.example.photouploader.config.CustomRequestCache;
-import com.vaadin.flow.component.Component;
+import com.example.photouploader.service.security_service_impl.UserDetailsServiceImpl;
 import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.login.LoginForm;
-import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -16,13 +12,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
 @Tag("sa-login-view")
@@ -35,7 +26,7 @@ public class LoginGui extends VerticalLayout {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    public LoginGui(AuthenticationManager authenticationManager, CustomRequestCache requestCache) {
+    public LoginGui(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService) {
         // configures login dialog and adds it to the main view
 //        if(SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
 //            UI.getCurrent().navigate(requestCache.resolveRedirectUrl());
@@ -58,11 +49,15 @@ public class LoginGui extends VerticalLayout {
                 // if authentication was successful we will update the security context and redirect to the page requested first
                 if(authReq != null ) {
                     login.close();
-                    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-                    SecurityContext securityContext = SecurityContextHolder.getContext();
-                    securityContext.setAuthentication(authReq);
-                    HttpSession session = request.getSession(true);
-                    session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(e.getUsername());
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()) ;
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+//                    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+//                    SecurityContext securityContext = SecurityContextHolder.getContext();
+//                    securityContext.setAuthentication(auth);
+//                    HttpSession session = request.getSession(true);
+//                    session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+//                    securityContext.getAuthentication();
 
                 }
 

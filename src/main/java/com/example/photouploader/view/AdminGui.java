@@ -1,5 +1,7 @@
 package com.example.photouploader.view;
 
+import com.example.photouploader.repo.UserRepo;
+import com.example.photouploader.service.security_service.UserService;
 import com.example.photouploader.service.upload_service.ByteConverter;
 import com.example.photouploader.service.upload_service.ImageUploaderService;
 import com.vaadin.flow.component.Component;
@@ -13,8 +15,10 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.io.*;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -23,24 +27,26 @@ import java.util.stream.Stream;
 
 @Route(value = AdminGui.ROUTE)
 @PageTitle("Admin Page")
-@Secured("ROLE_ADMIN")
+@Secured("ADMIN")
 public class AdminGui extends VerticalLayout{
     public static final String ROUTE = "adminis";
 
     private ImageUploaderService imageUploaderService;
     private ByteConverter byteConverter;
+    private UserService userService;
 
     @Autowired
-    public AdminGui(ImageUploaderService imageUploaderService, ByteConverter byteConverter) {
+    public AdminGui(ImageUploaderService imageUploaderService, ByteConverter byteConverter, UserService userService) {
         this.byteConverter = byteConverter;
         this.imageUploaderService = imageUploaderService;
-
+        this.userService = userService;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
         Upload upload = new Upload(buffer);
 
         upload.addSucceededListener(event -> {
             byteConverter.byteArrayToFile(buffer.getOutputBuffer(event.getFileName()), event);
-            imageUploaderService.uploadFile(new File(event.getFileName()));
+            imageUploaderService.uploadFile(new File(event.getFileName()),userService.getUserIdByUsername(authentication.getName()));
         });
 
         Tab tab1 = new Tab("Upload");
