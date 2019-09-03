@@ -15,8 +15,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
-@Tag("sa-login-view")
 @Route(value = LoginGui.ROUTE)
 @PageTitle("Login")
 public class LoginGui extends VerticalLayout {

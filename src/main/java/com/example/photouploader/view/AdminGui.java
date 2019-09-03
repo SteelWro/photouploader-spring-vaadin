@@ -1,12 +1,16 @@
 package com.example.photouploader.view;
 
-import com.example.photouploader.repo.UserRepo;
+import com.example.photouploader.model.Image;
+import com.example.photouploader.repo.ImageRepo;
 import com.example.photouploader.service.security_service.UserService;
 import com.example.photouploader.service.upload_service.ByteConverter;
 import com.example.photouploader.service.upload_service.ImageUploaderService;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.upload.Upload;
@@ -19,27 +23,28 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Push
 @Route(value = AdminGui.ROUTE)
 @PageTitle("Admin Page")
 @Secured("ADMIN")
-public class AdminGui extends VerticalLayout{
+public class AdminGui extends VerticalLayout {
     public static final String ROUTE = "adminis";
 
+    private ImageRepo imageRepo;
     private ImageUploaderService imageUploaderService;
     private ByteConverter byteConverter;
     private UserService userService;
 
     @Autowired
-    public AdminGui(ImageUploaderService imageUploaderService, ByteConverter byteConverter, UserService userService) {
+    public AdminGui(ImageUploaderService imageUploaderService, ByteConverter byteConverter, UserService userService, ImageRepo imageRepo) {
         this.byteConverter = byteConverter;
         this.imageUploaderService = imageUploaderService;
         this.userService = userService;
+        this.imageRepo = imageRepo;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
         Upload upload = new Upload(buffer);
@@ -49,13 +54,34 @@ public class AdminGui extends VerticalLayout{
             imageUploaderService.uploadFile(new File(event.getFileName()),userService.getUserIdByUsername(authentication.getName()));
         });
 
+        HorizontalLayout horizontalLayout;
+        Div galeria = new Div();
+        List<Image> images = imageRepo.findAll();
+        List<com.vaadin.flow.component.html.Image> vaadinImages = new ArrayList<>();
+        images.stream().forEach(element ->
+        {
+            vaadinImages.add(new com.vaadin.flow.component.html.Image(element.getImageAddress(), "cloudinaryPhoto"));
+        });
+
+        for(int i = 0; i<vaadinImages.size(); i++){
+            horizontalLayout = new HorizontalLayout();
+            for(int j = 0; j < 3; j++){
+                if(vaadinImages.get(i) == null) break;
+                horizontalLayout.add(vaadinImages.get(i));
+                i++;
+            }
+            galeria.add(horizontalLayout);
+            if(vaadinImages.get(i) == null) break;
+        }
+
+
         Tab tab1 = new Tab("Upload");
         Div page1 = new Div();
         page1.add(upload);
 
         Tab tab2 = new Tab("Gallery");
         Div page2 = new Div();
-        page2.setText("tu powstanie galeria obrazków");
+        page2.add(galeria);
         page2.setVisible(false);
 
         Map<Tab, Component> tabsToPages = new HashMap<>();

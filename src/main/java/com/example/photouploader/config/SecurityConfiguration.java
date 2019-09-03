@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -65,7 +66,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .formLogin()
                     .loginPage(LOGIN_URL)
                     .loginProcessingUrl(LOGIN_PROCESSING_URL)
-                    .defaultSuccessUrl(LOGIN_SUCCESS_DEFAULT_URL,true)
+                    //.defaultSuccessUrl(LOGIN_SUCCESS_DEFAULT_URL,true)
+                    .successHandler(myAuthenticationSuccessHandler())
                     .failureUrl(LOGIN_FAILURE_URL)
                     .permitAll()
                     .and()
@@ -119,10 +121,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //        return new CustomRequestCache();
 //    }
 
-//    @Bean
-//    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
-//        return new MyAuthenticationSuccessHandler();
-//    }
+    @Bean
+    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+        return new MyAuthenticationSuccessHandler();
+    }
 
     @EventListener(ApplicationReadyEvent.class)
     public void get(){

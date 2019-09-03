@@ -10,7 +10,6 @@ import com.example.photouploader.service.upload_service.ImageUploaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.xml.ws.ServiceMode;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,6 +37,12 @@ public class ImageUploaderServiceImpl implements ImageUploaderService {
                 "api_secret", "u2LS_LAFt2-gfjzGM1q6vxhieAY"));
     }
 
+    /**
+     * Uploading file to external Service and save url to database
+     *
+     * @param file uploaded file
+     * @return url uploaded file from External Service
+     */
     public String uploadFile(File file, long userId) {
         Map uploadResult = null;
         try {
