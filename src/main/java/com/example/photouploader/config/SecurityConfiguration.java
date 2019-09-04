@@ -5,6 +5,7 @@ import com.example.photouploader.model.User;
 import com.example.photouploader.repo.UserRepo;
 import com.example.photouploader.view.LoginGui;
 import com.example.photouploader.view.AdminGui;
+import com.example.photouploader.view.MainGui;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -28,10 +29,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
     private UserRepo userRepo;
-    private static final String LOGIN_PROCESSING_URL = "/" + LoginGui.ROUTE;
-    private static final String LOGIN_FAILURE_URL = "/" + LoginGui.ROUTE + "?errors";
-    private static final String LOGIN_URL = "/" + LoginGui.ROUTE;
-    private static final String LOGOUT_SUCCESS_URL = "/" + LoginGui.ROUTE;
+    private static final String LOGIN_PROCESSING_URL = "/" + MainGui.ROUTE;
+    private static final String LOGIN_FAILURE_URL = "/" + LoginGui.ROUTE + "?error=true";
+    private static final String LOGIN_URL = "/" + MainGui.ROUTE;
+    private static final String LOGOUT_SUCCESS_URL = "/" + MainGui.ROUTE;
     private static final String LOGIN_SUCCESS_DEFAULT_URL = "/" + AdminGui.ROUTE;
 
 
@@ -59,6 +60,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest)
                     .permitAll()
+                .antMatchers("/main").permitAll()
+                .antMatchers("/registration").permitAll()
                 .anyRequest()
                     .authenticated()
                     .and()

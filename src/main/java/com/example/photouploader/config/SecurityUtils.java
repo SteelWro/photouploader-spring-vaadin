@@ -1,6 +1,8 @@
 package com.example.photouploader.config;
 
 import com.example.photouploader.view.LoginGui;
+import com.example.photouploader.view.MainGui;
+import com.example.photouploader.view.RegistrationGui;
 import com.vaadin.flow.server.ServletHelper.RequestType;
 import com.vaadin.flow.shared.ApplicationConstants;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -59,10 +61,13 @@ public final class SecurityUtils {
 	 * @return true if access is granted, false otherwise.
 	 */
 	public static boolean isAccessGranted(Class<?> securedClass) {
-		final boolean publicView = LoginGui.class.equals(securedClass);
+		final boolean LoginView = LoginGui.class.equals(securedClass);
+		final boolean publicView = MainGui.class.equals(securedClass);
+		final boolean RegistrationView = RegistrationGui.class.equals(securedClass);
+
 
 		// Always allow access to public views
-		if (publicView) {
+		if (LoginView || publicView || RegistrationView) {
 			return true;
 		}
 

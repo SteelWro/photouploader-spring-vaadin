@@ -11,8 +11,10 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Page;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
@@ -38,6 +40,8 @@ public class AdminGui extends VerticalLayout {
     private ImageUploaderService imageUploaderService;
     private ByteConverter byteConverter;
     private UserService userService;
+    private Div gallery;
+    private Div page2;
 
     @Autowired
     public AdminGui(ImageUploaderService imageUploaderService, ByteConverter byteConverter, UserService userService, ImageRepo imageRepo) {
@@ -48,31 +52,13 @@ public class AdminGui extends VerticalLayout {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
         Upload upload = new Upload(buffer);
+        gallery = new Div();
+        page2 = new Div();
 
         upload.addSucceededListener(event -> {
             byteConverter.byteArrayToFile(buffer.getOutputBuffer(event.getFileName()), event);
             imageUploaderService.uploadFile(new File(event.getFileName()),userService.getUserIdByUsername(authentication.getName()));
         });
-
-        HorizontalLayout horizontalLayout;
-        Div galeria = new Div();
-        List<Image> images = imageRepo.findAll();
-        List<com.vaadin.flow.component.html.Image> vaadinImages = new ArrayList<>();
-        images.stream().forEach(element ->
-        {
-            vaadinImages.add(new com.vaadin.flow.component.html.Image(element.getImageAddress(), "cloudinaryPhoto"));
-        });
-
-        for(int i = 0; i<vaadinImages.size(); i++){
-            horizontalLayout = new HorizontalLayout();
-            for(int j = 0; j < 3; j++){
-                if(vaadinImages.get(i) == null) break;
-                horizontalLayout.add(vaadinImages.get(i));
-                i++;
-            }
-            galeria.add(horizontalLayout);
-            if(vaadinImages.get(i) == null) break;
-        }
 
 
         Tab tab1 = new Tab("Upload");
@@ -80,8 +66,7 @@ public class AdminGui extends VerticalLayout {
         page1.add(upload);
 
         Tab tab2 = new Tab("Gallery");
-        Div page2 = new Div();
-        page2.add(galeria);
+        page2.add(gallery);
         page2.setVisible(false);
 
         Map<Tab, Component> tabsToPages = new HashMap<>();
@@ -94,15 +79,43 @@ public class AdminGui extends VerticalLayout {
                 .collect(Collectors.toSet());
 
         tabs.addSelectedChangeListener(event -> {
+            updateGallery();
             pagesShown.forEach(page -> page.setVisible(false));
             pagesShown.clear();
             Component selectedPage = tabsToPages.get(tabs.getSelectedTab());
             selectedPage.setVisible(true);
+            page2.add(gallery);
             pagesShown.add(selectedPage);
+
         });
 
         add(tabs, pages);
 
+    }
+
+    public void updateGallery(){
+        HorizontalLayout horizontalLayout;
+        gallery.removeAll();
+        List<Image> images = imageRepo.findAll();
+        List<com.vaadin.flow.component.html.Image> vaadinImages = new ArrayList<>();
+        images.stream().forEach(element ->
+        {
+            vaadinImages.add(new com.vaadin.flow.component.html.Image(element.getImageAddress(), "cloudinaryPhoto"));
+        });
+        for(int i = 0; i<vaadinImages.size(); i++){
+            gallery.add(vaadinImages.get(i));
+        }
+
+//        for(int i = 0; i<vaadinImages.size(); i++){
+//            horizontalLayout = new HorizontalLayout();
+//            for(int j = 0; j < 3; j++){
+//                if(i<vaadinImages.size()) break;
+//                horizontalLayout.add(vaadinImages.get(i));
+//                i++;
+//            }
+//            gallery.add(horizontalLayout);
+//            if(i<vaadinImages.size()) break;
+//        }
     }
 
 
