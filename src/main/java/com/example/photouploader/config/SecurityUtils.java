@@ -1,8 +1,7 @@
 package com.example.photouploader.config;
 
-import com.example.photouploader.view.LoginGui;
-import com.example.photouploader.view.MainGui;
-import com.example.photouploader.view.RegistrationGui;
+import com.example.photouploader.model.Role;
+import com.example.photouploader.view.*;
 import com.vaadin.flow.server.ServletHelper.RequestType;
 import com.vaadin.flow.shared.ApplicationConstants;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -14,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -87,5 +87,29 @@ public final class SecurityUtils {
 		List<String> allowedRoles = Arrays.asList(secured.value());
 		return userAuthentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
 				.anyMatch(allowedRoles::contains);
+	}
+
+	public static String redirectGrantedUser(Authentication authentication){
+		boolean isUser = false;
+		boolean isAdmin = false;
+		Collection<? extends GrantedAuthority> authorities
+				= authentication.getAuthorities();
+		for (GrantedAuthority grantedAuthority : authorities) {
+			if (grantedAuthority.getAuthority().equals(Role.USER)) {
+				isUser = true;
+				break;
+			} else if (grantedAuthority.getAuthority().equals(Role.ADMIN)) {
+				isAdmin = true;
+				break;
+			}
+		}
+
+		if (isUser) {
+			return UserGui.ROUTE;
+		} else if (isAdmin) {
+			return AdminGui.ROUTE;
+		} else {
+			throw new IllegalStateException();
+		}
 	}
 }

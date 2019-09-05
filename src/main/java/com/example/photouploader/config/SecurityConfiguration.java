@@ -2,6 +2,7 @@ package com.example.photouploader.config;
 
 
 import com.example.photouploader.model.User;
+import com.example.photouploader.model.Role;
 import com.example.photouploader.repo.UserRepo;
 import com.example.photouploader.view.LoginGui;
 import com.example.photouploader.view.AdminGui;
@@ -29,7 +30,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
     private UserRepo userRepo;
-    private static final String LOGIN_PROCESSING_URL = "/" + MainGui.ROUTE;
+    private static final String LOGIN_PROCESSING_URL = "/" + LoginGui.ROUTE;
     private static final String LOGIN_FAILURE_URL = "/" + LoginGui.ROUTE + "?error=true";
     private static final String LOGIN_URL = "/" + MainGui.ROUTE;
     private static final String LOGOUT_SUCCESS_URL = "/" + MainGui.ROUTE;
@@ -131,8 +132,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @EventListener(ApplicationReadyEvent.class)
     public void get(){
-        User appUserUser = new User("jan", passwordEncoder().encode("jan"), "USER");
-        User appUserAdmin = new User("admin", passwordEncoder().encode("admin"), "ADMIN");
+        User appUserUser = new User("jan", passwordEncoder().encode("jan"), Role.USER);
+        User appUserAdmin = new User("admin", passwordEncoder().encode("admin"), Role.ADMIN);
         userRepo.save(appUserUser);
         userRepo.save(appUserAdmin);
     }

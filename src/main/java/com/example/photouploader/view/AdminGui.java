@@ -2,19 +2,17 @@ package com.example.photouploader.view;
 
 import com.example.photouploader.model.Image;
 import com.example.photouploader.repo.ImageRepo;
+import com.example.photouploader.model.Role;
 import com.example.photouploader.service.security_service.UserService;
 import com.example.photouploader.service.upload_service.ByteConverter;
 import com.example.photouploader.service.upload_service.ImageUploaderService;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.router.PageTitle;
@@ -32,7 +30,7 @@ import java.util.stream.Stream;
 @Push
 @Route(value = AdminGui.ROUTE)
 @PageTitle("Admin Page")
-@Secured("ADMIN")
+@Secured(Role.ADMIN)
 public class AdminGui extends VerticalLayout {
     public static final String ROUTE = "adminis";
 

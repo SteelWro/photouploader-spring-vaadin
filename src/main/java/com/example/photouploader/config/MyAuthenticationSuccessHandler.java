@@ -1,5 +1,6 @@
 package com.example.photouploader.config;
 
+import com.example.photouploader.model.Role;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.springframework.security.core.Authentication;
@@ -8,7 +9,6 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,10 +53,10 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
             Collection<? extends GrantedAuthority> authorities
                     = authentication.getAuthorities();
             for (GrantedAuthority grantedAuthority : authorities) {
-                if (grantedAuthority.getAuthority().equals("USER")) {
+                if (grantedAuthority.getAuthority().equals(Role.USER)) {
                     isUser = true;
                     break;
-                } else if (grantedAuthority.getAuthority().equals("ADMIN")) {
+                } else if (grantedAuthority.getAuthority().equals(Role.ADMIN)) {
                     isAdmin = true;
                     break;
                 }
