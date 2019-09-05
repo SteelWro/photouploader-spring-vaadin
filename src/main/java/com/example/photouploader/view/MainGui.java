@@ -2,20 +2,20 @@ package com.example.photouploader.view;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.dom.Style;
-import com.vaadin.flow.router.*;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterListener;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = MainGui.ROUTE)
 @PageTitle("Main")
-@CssImport("./MainGuiStyle.css")
+@StyleSheet("public/css/style.css")
 public class MainGui extends VerticalLayout implements BeforeEnterListener {
     public final static String ROUTE = "main";
 

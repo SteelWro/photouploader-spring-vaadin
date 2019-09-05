@@ -99,7 +99,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/frontend/**",
                 "/webjars/**",
                 "/h2-console/**",
-                "/frontend-es5/**", "/frontend-es6/**");
+                "/frontend-es5/**",
+                "/frontend-es6/**");
     }
 
 //    @Autowired
