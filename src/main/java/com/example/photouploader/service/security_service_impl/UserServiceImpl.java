@@ -5,14 +5,17 @@ import com.example.photouploader.model.Role;
 import com.example.photouploader.repo.UserRepo;
 import com.example.photouploader.service.security_service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+    PasswordEncoder passwordEncoder;
     UserRepo userRepo;
 
     @Autowired
-    public UserServiceImpl(UserRepo userRepo) {
+    public UserServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
     }
 
@@ -28,6 +31,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(String username, String password) {
-        userRepo.save(new User(username, password, Role.USER));
+        userRepo.save(new User(username, passwordEncoder.encode(password), Role.USER));
     }
 }

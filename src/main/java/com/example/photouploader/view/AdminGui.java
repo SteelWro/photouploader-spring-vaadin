@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 @PageTitle("Admin Page")
 @Secured(Role.ADMIN)
 public class AdminGui extends VerticalLayout {
-    public static final String ROUTE = "adminis";
+    public static final String ROUTE = "admin";
 
     private ImageRepo imageRepo;
     private ImageUploaderService imageUploaderService;
