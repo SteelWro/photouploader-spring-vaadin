@@ -1,5 +1,6 @@
 package com.example.photouploader.view;
 
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
@@ -15,23 +16,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = MainGui.ROUTE)
 @PageTitle("Main")
-@StyleSheet("public/css/style.css")
+@StyleSheet("MainGuiStyle.css")
 public class MainGui extends VerticalLayout implements BeforeEnterListener {
     public final static String ROUTE = "main";
 
     private Button registryButton = new Button("Sing Up");
     private Button loginButton = new Button("Sign In");
-    private Div mainDiv = new Div();
-    private Div titleDiv = new Div();
+    private Div outer = new Div();
+    private Div middle = new Div();
+    private Div topDiv = new Div();
+    private Div bottomDiv = new Div();
     private Div buttonsDiv = new Div();
     private H1 titleText = new H1("Photo Cloud");
+    private Text descriptionText = new Text("Free cloud service for photos");
 
     @Autowired
     public MainGui() {
-        buttonsDiv.add(new HorizontalLayout(loginButton,registryButton));
-        titleText.add();
-        mainDiv.add(titleDiv,buttonsDiv);
-        add(mainDiv);
+        //UI.getCurrent().getPage().addStyleSheet("/MainGuiStyle.css");
+        topDiv.addClassName("topDiv");
+        bottomDiv.addClassName("bottomDiv");
+        outer.addClassName("outer");
+        middle.addClassName("middle");
+        titleText.addClassName("title");
+        loginButton.addClassName("button");
+        registryButton.addClassName("button");
+        buttonsDiv.addClassName("buttonsDiv");
+        //descriptionText.getElement().getStyle().set("color","#ACCEFB");
+        buttonsDiv.add(new HorizontalLayout(loginButton, registryButton));
+        topDiv.add(new VerticalLayout(titleText, descriptionText));
+        bottomDiv.add(buttonsDiv);
+        outer.add(topDiv, bottomDiv);
+        add(outer);
 
 
         loginButton.addClickListener(e -> {

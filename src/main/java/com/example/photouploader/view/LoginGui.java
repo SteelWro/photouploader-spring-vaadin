@@ -4,35 +4,23 @@ package com.example.photouploader.view;
 import com.example.photouploader.config.MyAuthenticationSuccessHandler;
 import com.example.photouploader.config.SecurityUtils;
 import com.example.photouploader.service.security_service_impl.UserDetailsServiceImpl;
-import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
-import com.vaadin.flow.component.menubar.MenuBar;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.internal.BeforeEnterHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 
 @Route(value = LoginGui.ROUTE)
 @PageTitle("Login")
-public class LoginGui extends VerticalLayout{
+public class LoginGui extends VerticalLayout {
     public static final String ROUTE = "login";
 
     private MyAuthenticationSuccessHandler authenticationSuccessHandler;

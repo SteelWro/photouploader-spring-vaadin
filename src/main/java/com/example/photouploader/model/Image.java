@@ -14,7 +14,7 @@ public class Image {
     private Long userId;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(name="user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
 
     public Image() {

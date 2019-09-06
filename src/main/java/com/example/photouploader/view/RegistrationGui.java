@@ -2,6 +2,7 @@ package com.example.photouploader.view;
 
 import com.example.photouploader.model.User;
 import com.example.photouploader.service.security_service.UserService;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -23,10 +24,12 @@ import java.util.stream.Collectors;
 
 @Route(value = RegistrationGui.ROUTE)
 @PageTitle("Registration")
+@StyleSheet("RegistrationGuiStyle.css")
 public class RegistrationGui extends VerticalLayout {
     public final static String ROUTE = "registration";
 
     UserService userService;
+
     FormLayout layoutWithBinder = new FormLayout();
     Binder<User> binder = new Binder<>();
     User newUser = new User();
@@ -34,9 +37,10 @@ public class RegistrationGui extends VerticalLayout {
     PasswordField passwordField = new PasswordField("password");
     Dialog good = new Dialog(new Label("good"));
     Dialog bad = new Dialog(new Label("bad"));
-    Div div = new Div();
-
+    Div outer = new Div();
+    Div inner = new Div();
     NativeButton save = new NativeButton("Save");
+
 
     @Autowired
     public RegistrationGui(UserService userService) {
@@ -61,24 +65,22 @@ public class RegistrationGui extends VerticalLayout {
                 .bind(User::getUsername, User::setUsername);
 
         binder.forField(loginField)
-                .withValidator((Validator<String>) (value,valueContext) -> {
+                .withValidator((Validator<String>) (value, valueContext) -> {
                     Boolean boo = !userService.isUserIsUsed(value);
-                    if(boo){
+                    if (boo) {
                         return ValidationResult.ok();
                     }
-                    return ValidationResult.error("Login in used");})
+                    return ValidationResult.error("Login in used");
+                })
                 .bind(User::getUsername, User::setUsername);
 
         Binder.Binding<User, String> passwordBinding = binder.forField(passwordField)
                 .withValidator(new StringLengthValidator(
-                "Password minimum length is 6 characters",6, 120))
+                        "Password minimum length is 6 characters", 6, 120))
                 .bind(User::getPassword, User::setPassword);
 
         loginField.addValueChangeListener(e -> loginBinding.validate());
         passwordField.addValueChangeListener(e -> passwordBinding.validate());
-
-
-
 
         save.addClickListener(event -> {
             if (binder.writeBeanIfValid(newUser)) {
@@ -94,7 +96,11 @@ public class RegistrationGui extends VerticalLayout {
                 bad.open();
             }
         });
-        div.add(layoutWithBinder,save);
-        add(div);
+
+        outer.addClassName("outer");
+        inner.addClassName("inner");
+        inner.add(layoutWithBinder, save);
+        outer.add(inner);
+        add(outer);
     }
 }

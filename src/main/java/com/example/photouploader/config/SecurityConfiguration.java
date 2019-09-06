@@ -60,26 +60,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         // Not using Spring CSRF here to be able to use plain HTML for the login page
         http.authorizeRequests()
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest)
-                    .permitAll()
+                .permitAll()
                 .antMatchers("/main").permitAll()
                 .antMatchers("/registration").permitAll()
                 .anyRequest()
-                    .authenticated()
-                    .and()
+                .authenticated()
+                .and()
                 .userDetailsService(userDetailsService)
                 .formLogin()
-                    .loginPage(LOGIN_URL)
-                    .loginProcessingUrl(LOGIN_PROCESSING_URL)
-                    //.defaultSuccessUrl(LOGIN_SUCCESS_DEFAULT_URL,true)
-                    .successHandler(myAuthenticationSuccessHandler())
-                    .failureUrl(LOGIN_FAILURE_URL)
-                    .permitAll()
-                    .and()
+                .loginPage(LOGIN_URL)
+                .loginProcessingUrl(LOGIN_PROCESSING_URL)
+                //.defaultSuccessUrl(LOGIN_SUCCESS_DEFAULT_URL,true)
+                .successHandler(myAuthenticationSuccessHandler())
+                .failureUrl(LOGIN_FAILURE_URL)
+                .permitAll()
+                .and()
                 .logout()
-                    .logoutSuccessUrl(LOGOUT_SUCCESS_URL)
-                    .and()
+                .logoutSuccessUrl(LOGOUT_SUCCESS_URL)
+                .and()
                 .csrf()
-                    .disable();
+                .disable();
     }
 
     /**
@@ -117,7 +117,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -127,12 +127,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //    }
 
     @Bean
-    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+    public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
         return new MyAuthenticationSuccessHandler();
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void get(){
+    public void get() {
         User appUserUser = new User("jan", passwordEncoder().encode("jan"), Role.USER);
         User appUserAdmin = new User("admin", passwordEncoder().encode("admin"), Role.ADMIN);
         userRepo.save(appUserUser);
