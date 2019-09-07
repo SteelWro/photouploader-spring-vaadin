@@ -18,72 +18,73 @@ import java.util.Collection;
 
 public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-        protected Log logger = LogFactory.getLog(this.getClass());
+    protected Log logger = LogFactory.getLog(this.getClass());
 
-        private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
-        @Override
-        public void onAuthenticationSuccess(HttpServletRequest request,
-                                            HttpServletResponse response, Authentication authentication)
-                throws IOException {
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response, Authentication authentication)
+            throws IOException {
 
-            handle(request, response, authentication);
-            clearAuthenticationAttributes(request);
+        handle(request, response, authentication);
+        clearAuthenticationAttributes(request);
+    }
+
+    protected void handle(HttpServletRequest request,
+                          HttpServletResponse response, Authentication authentication)
+            throws IOException {
+
+        String targetUrl = determineTargetUrl(authentication);
+
+        if (response.isCommitted()) {
+            logger.debug(
+                    "Response has already been committed. Unable to redirect to "
+                            + targetUrl);
+            return;
         }
 
-        protected void handle(HttpServletRequest request,
-                              HttpServletResponse response, Authentication authentication)
-                throws IOException {
+        redirectStrategy.sendRedirect(request, response, targetUrl);
+    }
 
-            String targetUrl = determineTargetUrl(authentication);
-
-            if (response.isCommitted()) {
-                logger.debug(
-                        "Response has already been committed. Unable to redirect to "
-                                + targetUrl);
-                return;
-            }
-
-            redirectStrategy.sendRedirect(request, response, targetUrl);
-        }
-
-        protected String determineTargetUrl(Authentication authentication) {
-            boolean isUser = false;
-            boolean isAdmin = false;
-            Collection<? extends GrantedAuthority> authorities
-                    = authentication.getAuthorities();
-            for (GrantedAuthority grantedAuthority : authorities) {
-                if (grantedAuthority.getAuthority().equals(Role.USER)) {
-                    isUser = true;
-                    break;
-                } else if (grantedAuthority.getAuthority().equals(Role.ADMIN)) {
-                    isAdmin = true;
-                    break;
-                }
-            }
-
-            if (isUser) {
-                return "/gallery";
-            } else if (isAdmin) {
-                return "/adminis";
-            } else {
-                throw new IllegalStateException();
+    protected String determineTargetUrl(Authentication authentication) {
+        boolean isUser = false;
+        boolean isAdmin = false;
+        Collection<? extends GrantedAuthority> authorities
+                = authentication.getAuthorities();
+        for (GrantedAuthority grantedAuthority : authorities) {
+            if (grantedAuthority.getAuthority().equals(Role.USER)) {
+                isUser = true;
+                break;
+            } else if (grantedAuthority.getAuthority().equals(Role.ADMIN)) {
+                isAdmin = true;
+                break;
             }
         }
 
-        protected void clearAuthenticationAttributes(HttpServletRequest request) {
-            HttpSession session = request.getSession(false);
-            if (session == null) {
-                return;
-            }
-            session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-        }
-
-        public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
-            this.redirectStrategy = redirectStrategy;
-        }
-        protected RedirectStrategy getRedirectStrategy() {
-            return redirectStrategy;
+        if (isUser) {
+            return "/gallery";
+        } else if (isAdmin) {
+            return "/adminis";
+        } else {
+            throw new IllegalStateException();
         }
     }
+
+    protected void clearAuthenticationAttributes(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return;
+        }
+        session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+    }
+
+    public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
+        this.redirectStrategy = redirectStrategy;
+    }
+
+    protected RedirectStrategy getRedirectStrategy() {
+        return redirectStrategy;
+    }
+}
 

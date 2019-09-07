@@ -4,8 +4,8 @@ import com.example.photouploader.model.Image;
 import com.example.photouploader.repo.ImageRepo;
 import com.example.photouploader.model.Role;
 import com.example.photouploader.service.security_service.UserService;
-import com.example.photouploader.service.upload_service.ByteConverter;
-import com.example.photouploader.service.upload_service.ImageUploaderService;
+import com.example.photouploader.service.cloud_service.ByteConverter;
+import com.example.photouploader.service.cloud_service.ImageUploaderService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -55,7 +55,7 @@ public class AdminGui extends VerticalLayout {
 
         upload.addSucceededListener(event -> {
             byteConverter.byteArrayToFile(buffer.getOutputBuffer(event.getFileName()), event);
-            imageUploaderService.uploadFile(new File(event.getFileName()),userService.getUserIdByUsername(authentication.getName()));
+            imageUploaderService.uploadFile(new File(event.getFileName()), userService.getUserIdByUsername(authentication.getName()));
         });
 
 
@@ -91,7 +91,7 @@ public class AdminGui extends VerticalLayout {
 
     }
 
-    public void updateGallery(){
+    public void updateGallery() {
         HorizontalLayout horizontalLayout;
         gallery.removeAll();
         List<Image> images = imageRepo.findAll();
@@ -100,7 +100,7 @@ public class AdminGui extends VerticalLayout {
         {
             vaadinImages.add(new com.vaadin.flow.component.html.Image(element.getImageAddress(), "cloudinaryPhoto"));
         });
-        for(int i = 0; i<vaadinImages.size(); i++){
+        for (int i = 0; i < vaadinImages.size(); i++) {
             gallery.add(vaadinImages.get(i));
         }
 
@@ -115,8 +115,6 @@ public class AdminGui extends VerticalLayout {
 //            if(i<vaadinImages.size()) break;
 //        }
     }
-
-
 
 
 }
