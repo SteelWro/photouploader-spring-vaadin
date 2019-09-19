@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @StyleSheet("MainGuiStyle.css")
 public class MainGui extends VerticalLayout implements BeforeEnterListener {
     public final static String ROUTE = "main";
+    public final static String LOGOUT_ROUTE = "logout";
 
     private Button registryButton = new Button("Sing Up");
     private Button loginButton = new Button("Sign In");
@@ -28,7 +30,7 @@ public class MainGui extends VerticalLayout implements BeforeEnterListener {
     private Div bottomDiv = new Div();
     private Div buttonsDiv = new Div();
     private H1 titleText = new H1("Photo Cloud");
-    private Text descriptionText = new Text("Free cloud service for photos");
+    private Label descriptionText = new Label("Free cloud service for photos");
 
     @Autowired
     public MainGui() {
@@ -41,17 +43,18 @@ public class MainGui extends VerticalLayout implements BeforeEnterListener {
         loginButton.addClassName("button");
         registryButton.addClassName("button");
         buttonsDiv.addClassName("buttonsDiv");
-        //descriptionText.getElement().getStyle().set("color","#ACCEFB");
+        descriptionText.addClassName("descriptionText");
+        //escriptionText.getElement().getStyle().set("color","#ACCEFB");
         buttonsDiv.add(new HorizontalLayout(loginButton, registryButton));
         topDiv.add(new VerticalLayout(titleText, descriptionText));
         bottomDiv.add(buttonsDiv);
         outer.add(topDiv, bottomDiv);
         add(outer);
 
-
         loginButton.addClickListener(e -> {
             UI.getCurrent().navigate(LoginGui.ROUTE);
         });
+
         registryButton.addClickListener(e -> {
             UI.getCurrent().navigate(RegistrationGui.ROUTE);
         });

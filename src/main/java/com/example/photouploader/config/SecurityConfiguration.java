@@ -35,6 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String LOGIN_URL = "/" + MainGui.ROUTE;
     private static final String LOGOUT_SUCCESS_URL = "/" + MainGui.ROUTE;
     private static final String LOGIN_SUCCESS_DEFAULT_URL = "/" + AdminGui.ROUTE;
+    private static final String LOGOUT_URL = "/" + MainGui.LOGOUT_ROUTE;
 
 
     @Autowired
@@ -57,34 +58,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        // Not using Spring CSRF here to be able to use plain HTML for the login page
         http.authorizeRequests()
-                .requestMatchers(SecurityUtils::isFrameworkInternalRequest)
-                .permitAll()
+                .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
                 .antMatchers("/main").permitAll()
                 .antMatchers("/registration").permitAll()
-                .anyRequest()
-                .authenticated()
+                .anyRequest().authenticated()
                 .and()
                 .userDetailsService(userDetailsService)
                 .formLogin()
                 .loginPage(LOGIN_URL)
                 .loginProcessingUrl(LOGIN_PROCESSING_URL)
                 //.defaultSuccessUrl(LOGIN_SUCCESS_DEFAULT_URL,true)
-                .successHandler(myAuthenticationSuccessHandler())
-                .failureUrl(LOGIN_FAILURE_URL)
-                .permitAll()
+                //.successHandler(myAuthenticationSuccessHandler())
+                .failureUrl(LOGIN_FAILURE_URL).permitAll()
                 .and()
-                .logout()
-                .logoutSuccessUrl(LOGOUT_SUCCESS_URL)
+                .logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL).logoutUrl(LOGOUT_URL).permitAll()
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .and()
-                .csrf()
-                .disable();
+                .csrf().disable();
     }
 
-    /**
-     * Allows access to static resources, bypassing Spring security.
-     */
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(
@@ -126,10 +120,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //        return new CustomRequestCache();
 //    }
 
-    @Bean
-    public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
-        return new MyAuthenticationSuccessHandler();
-    }
+//    @Bean
+//    public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
+//        return new MyAuthenticationSuccessHandler();
+//    }
 
     @EventListener(ApplicationReadyEvent.class)
     public void get() {

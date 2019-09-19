@@ -1,7 +1,6 @@
 package com.example.photouploader.view;
 
 
-import com.example.photouploader.config.MyAuthenticationSuccessHandler;
 import com.example.photouploader.config.SecurityUtils;
 import com.example.photouploader.service.security_service_impl.UserDetailsServiceImpl;
 import com.vaadin.flow.component.UI;
@@ -23,45 +22,29 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class LoginGui extends VerticalLayout {
     public static final String ROUTE = "login";
 
-    private MyAuthenticationSuccessHandler authenticationSuccessHandler;
     private AuthenticationManager authenticationManager;
     private LoginOverlay login = new LoginOverlay();
-    private String route = null;
 
 
     @Autowired
-    public LoginGui(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService, MyAuthenticationSuccessHandler authenticationSuccessHandler) {
+    public LoginGui(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService) {
         add(login);
         login.setOpened(true);
         login.setTitle("Photo Cloud");
-        //login.setAction("login");
         login.setDescription("Free cloud service for photos");
         getElement().appendChild(login.getElement());
-//        if(!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")){
-//            login.close();
-//            UI.getCurrent().navigate(SecurityUtils.redirectGrantedUser(SecurityContextHolder.getContext().getAuthentication()) );
-//        }
+
         login.addLoginListener(e -> {
             try {
                 UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(e.getUsername(), e.getPassword());
                 final Authentication auth = authenticationManager.authenticate(authReq);
-                // try to authenticate with given credentials, should always return !null or throw an {@link AuthenticationException}
-//                final Authentication authentication = authenticationManager
-//                        .authenticate(new UsernamePasswordAuthenticationToken());
-
-                // if authentication was successful we will update the security context and redirect to the page requested first
                 if (authReq != null) {
                     login.close();
                     UserDetails userDetails = userDetailsService.loadUserByUsername(e.getUsername());
                     Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     UI.getCurrent().navigate(SecurityUtils.redirectGrantedUser(authentication));
-//                    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-//                    SecurityContext securityContext = SecurityContextHolder.getContext();
-//                    securityContext.setAuthentication(auth);
-//                    HttpSession session = request.getSession(true);
-//                    session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-//                    securityContext.getAuthentication();
+
                 }
             } catch (AuthenticationException ex) {
                 login.setError(true);

@@ -47,7 +47,14 @@ body{
     margin: auto;
 }
 .title{
+    margin: 3px;
     color: white;
 }
+.descriptionText {
+    color: #ACCEFB;
+    margin-top: 3px;
+    margin-left: 4px;
+}
+
 
 

@@ -1,14 +1,13 @@
 package com.example.photouploader.view;
 
 import com.example.photouploader.model.User;
-import com.example.photouploader.service.security_service.UserService;
+import com.example.photouploader.service.repo_service.UserRepoService;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -28,23 +27,24 @@ import java.util.stream.Collectors;
 public class RegistrationGui extends VerticalLayout {
     public final static String ROUTE = "registration";
 
-    UserService userService;
+    UserRepoService userRepoService;
 
     FormLayout layoutWithBinder = new FormLayout();
     Binder<User> binder = new Binder<>();
     User newUser = new User();
+    Label labelText = new Label("Create your user");
     TextField loginField = new TextField("login");
     PasswordField passwordField = new PasswordField("password");
     Dialog good = new Dialog(new Label("good"));
     Dialog bad = new Dialog(new Label("bad"));
     Div outer = new Div();
     Div inner = new Div();
-    NativeButton save = new NativeButton("Save");
+    Button save = new Button("Save");
 
 
     @Autowired
-    public RegistrationGui(UserService userService) {
-        this.userService = userService;
+    public RegistrationGui(UserRepoService userRepoService) {
+        this.userRepoService = userRepoService;
         layoutWithBinder.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1),
                 new FormLayout.ResponsiveStep("32em", 2));
@@ -66,7 +66,7 @@ public class RegistrationGui extends VerticalLayout {
 
         binder.forField(loginField)
                 .withValidator((Validator<String>) (value, valueContext) -> {
-                    Boolean boo = !userService.isUserIsUsed(value);
+                    Boolean boo = !userRepoService.isUserIsUsed(value);
                     if (boo) {
                         return ValidationResult.ok();
                     }
@@ -85,7 +85,7 @@ public class RegistrationGui extends VerticalLayout {
         save.addClickListener(event -> {
             if (binder.writeBeanIfValid(newUser)) {
                 good.open();
-                userService.saveUser(loginField.getValue(), passwordField.getValue());
+                userRepoService.saveUser(loginField.getValue(), passwordField.getValue());
             } else {
                 BinderValidationStatus<User> validate = binder.validate();
                 String errorText = validate.getFieldValidationStatuses()
@@ -99,7 +99,10 @@ public class RegistrationGui extends VerticalLayout {
 
         outer.addClassName("outer");
         inner.addClassName("inner");
+        labelText.addClassName("label");
+        save.addClassName("primary");
         inner.add(layoutWithBinder, save);
+        outer.add(labelText);
         outer.add(inner);
         add(outer);
     }

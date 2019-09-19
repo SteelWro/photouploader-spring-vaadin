@@ -1,6 +1,6 @@
-package com.example.photouploader.service.security_service;
+package com.example.photouploader.service.repo_service;
 
-public interface UserService {
+public interface UserRepoService {
     Long getUserIdByUsername(String name);
 
     boolean isUserIsUsed(String username);

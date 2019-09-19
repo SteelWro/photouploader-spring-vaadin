@@ -3,11 +3,12 @@ package com.example.photouploader.view;
 import com.example.photouploader.model.Image;
 import com.example.photouploader.repo.ImageRepo;
 import com.example.photouploader.model.Role;
-import com.example.photouploader.service.security_service.UserService;
-import com.example.photouploader.service.cloud_service.ByteConverter;
-import com.example.photouploader.service.cloud_service.ImageUploaderService;
+import com.example.photouploader.service.repo_service.UserRepoService;
+import com.example.photouploader.service.cloudinary_service.ByteConverter;
+import com.example.photouploader.service.cloudinary_service.ImageUploaderService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
@@ -35,15 +36,15 @@ public class UserGui extends VerticalLayout {
     private ImageRepo imageRepo;
     private ImageUploaderService imageUploaderService;
     private ByteConverter byteConverter;
-    private UserService userService;
+    private UserRepoService userRepoService;
     private Div gallery;
     private Div page2;
 
     @Autowired
-    public UserGui(ImageUploaderService imageUploaderService, ByteConverter byteConverter, UserService userService, ImageRepo imageRepo) {
+    public UserGui(ImageUploaderService imageUploaderService, ByteConverter byteConverter, UserRepoService userRepoService, ImageRepo imageRepo) {
         this.byteConverter = byteConverter;
         this.imageUploaderService = imageUploaderService;
-        this.userService = userService;
+        this.userRepoService = userRepoService;
         this.imageRepo = imageRepo;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
@@ -53,15 +54,15 @@ public class UserGui extends VerticalLayout {
 
         upload.addSucceededListener(event -> {
             byteConverter.byteArrayToFile(buffer.getOutputBuffer(event.getFileName()), event);
-            imageUploaderService.uploadFile(new File(event.getFileName()), userService.getUserIdByUsername(authentication.getName()));
+            imageUploaderService.uploadFile(new File(event.getFileName()), userRepoService.getUserIdByUsername(authentication.getName()));
         });
 
         Tab tab1 = new Tab("Upload");
         Div page1 = new Div();
-        page1.add(upload);
+        page1.add(new Label("User Page in works"));
 
         Tab tab2 = new Tab("Gallery");
-        page2.add(gallery);
+        page2.add(new Label("User Page in works"));
         page2.setVisible(false);
 
         Map<Tab, Component> tabsToPages = new HashMap<>();

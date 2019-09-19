@@ -1,6 +1,7 @@
 package com.example.photouploader.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Image {
@@ -9,6 +10,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String imageAddress;
+    private String thumbnailAddress;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
@@ -20,9 +22,18 @@ public class Image {
     public Image() {
     }
 
-    public Image(String imageAddress, Long userId) {
+    public Image(String imageAddress, Long userId, String thumbnailAddress) {
+        this.thumbnailAddress = thumbnailAddress;
         this.imageAddress = imageAddress;
         this.userId = userId;
+    }
+
+    public String getThumbnailAddress() {
+        return thumbnailAddress;
+    }
+
+    public void setThumbnailAddress(String thumbnailAddress) {
+        this.thumbnailAddress = thumbnailAddress;
     }
 
     public Long getId() {

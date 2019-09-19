@@ -1,20 +1,20 @@
-package com.example.photouploader.service.security_service_impl;
+package com.example.photouploader.service.repo_service_impl;
 
 import com.example.photouploader.model.User;
 import com.example.photouploader.model.Role;
 import com.example.photouploader.repo.UserRepo;
-import com.example.photouploader.service.security_service.UserService;
+import com.example.photouploader.service.repo_service.UserRepoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserRepoServiceImpl implements UserRepoService {
     PasswordEncoder passwordEncoder;
     UserRepo userRepo;
 
     @Autowired
-    public UserServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder) {
+    public UserRepoServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
     }

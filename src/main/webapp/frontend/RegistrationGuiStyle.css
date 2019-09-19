@@ -11,12 +11,19 @@
     left: 0;
     right: 0;
     margin: auto;
+    padding-top: 20px;
 }
 
 .inner{
+
+    margin-top: 20px;
     padding: 5px;
     position: absolute;
     top: 45%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
+}
+.label{
+    margin-left: 60px;
+    font-size: 25px;
 }

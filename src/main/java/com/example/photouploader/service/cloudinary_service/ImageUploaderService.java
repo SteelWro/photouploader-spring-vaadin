@@ -1,4 +1,4 @@
-package com.example.photouploader.service.cloud_service;
+package com.example.photouploader.service.cloudinary_service;
 
 import java.io.File;
 
