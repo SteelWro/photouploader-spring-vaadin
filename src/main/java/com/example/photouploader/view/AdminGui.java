@@ -43,15 +43,15 @@ public class AdminGui extends VerticalLayout {
     private UserRepoService userRepoService;
     private ImageRepoService imageRepoService;
     private Div gallery;
-    Tab tab1;
+    private Tab tab1;
     private Div page1;
     private Tab tab2;
     private Div page2;
-    Tabs tabs;
-    Div pages;
-    Set<Component> pagesShown;
-    Map<Tab, Component> tabsToPages;
-    Button logoutButton;
+    private Tabs tabs;
+    private Div pages;
+    private Set<Component> pagesShown;
+    private Map<Tab, Component> tabsToPages;
+    private Button logoutButton;
     private HttpServletRequest req;
 
     @Autowired
@@ -81,9 +81,7 @@ public class AdminGui extends VerticalLayout {
         tabsToPages.put(tab1, page1);
         tabsToPages.put(tab2, page2);
 
-        tabs.addSelectedChangeListener(e -> {
-           tabChanger();
-        });
+        tabs.addSelectedChangeListener(e -> tabChanger());
 
         upload.addSucceededListener(e -> {
             byteConverter.byteArrayToFile(buffer.getOutputBuffer(e.getFileName()), e);
@@ -101,17 +99,9 @@ public class AdminGui extends VerticalLayout {
     }
 
     private void updateGallery() {
-        HorizontalLayout horizontalLayout;
         gallery.removeAll();
         List<Image> images = imageRepoService.getAllThumbnails();
-        images.forEach(i -> {
-            Button button = new Button("delete");
-            Optional<String> b = i.getAlt();
-            button.addClickListener(e -> {
-                deletePhoto(i.getAlt());
-            });
-            gallery.add(new HorizontalLayout(i, button));
-        });
+        images.forEach(this::accept);
         page2.add(gallery);
     }
 
@@ -131,7 +121,13 @@ public class AdminGui extends VerticalLayout {
         pagesShown.add(selectedPage);
     }
 
-
+    private void accept(Image i) {
+        Button button = new Button("delete");
+        button.addClickListener(e -> {
+            deletePhoto(i.getAlt());
+        });
+        gallery.add(new HorizontalLayout(i, button));
+    }
 }
 
 

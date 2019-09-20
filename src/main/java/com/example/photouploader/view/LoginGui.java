@@ -22,12 +22,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class LoginGui extends VerticalLayout {
     public static final String ROUTE = "login";
 
-    private AuthenticationManager authenticationManager;
     private LoginOverlay login = new LoginOverlay();
 
 
     @Autowired
-    public LoginGui(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService) {
+    public LoginGui(UserDetailsServiceImpl userDetailsService) {
         add(login);
         login.setOpened(true);
         login.setTitle("Photo Cloud");
@@ -37,7 +36,7 @@ public class LoginGui extends VerticalLayout {
         login.addLoginListener(e -> {
             try {
                 UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(e.getUsername(), e.getPassword());
-                final Authentication auth = authenticationManager.authenticate(authReq);
+                //final Authentication auth = authenticationManager.authenticate(authReq);
                 if (authReq != null) {
                     login.close();
                     UserDetails userDetails = userDetailsService.loadUserByUsername(e.getUsername());
