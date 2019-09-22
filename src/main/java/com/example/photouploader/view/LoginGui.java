@@ -21,9 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @PageTitle("Login")
 public class LoginGui extends VerticalLayout {
     public static final String ROUTE = "login";
-
     private LoginOverlay login = new LoginOverlay();
-
 
     @Autowired
     public LoginGui(UserDetailsServiceImpl userDetailsService) {
@@ -36,7 +34,6 @@ public class LoginGui extends VerticalLayout {
         login.addLoginListener(e -> {
             try {
                 UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(e.getUsername(), e.getPassword());
-                //final Authentication auth = authenticationManager.authenticate(authReq);
                 if (authReq != null) {
                     login.close();
                     UserDetails userDetails = userDetailsService.loadUserByUsername(e.getUsername());

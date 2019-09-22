@@ -18,6 +18,15 @@ public class ImageRepoServiceImpl implements ImageRepoService {
         this.imageRepo = imageRepo;
     }
 
+    private List<com.vaadin.flow.component.html.Image> getImages(List<Image> images) {
+        List<com.vaadin.flow.component.html.Image> vaadinImages = new ArrayList<>();
+        images.stream().forEach(e ->
+        {
+            vaadinImages.add(new com.vaadin.flow.component.html.Image(e.getThumbnailAddress(), e.getId().toString()));
+        });
+        return vaadinImages;
+    }
+
     @Override
     public void saveImage(Image image) {
         imageRepo.save(image);
@@ -36,12 +45,13 @@ public class ImageRepoServiceImpl implements ImageRepoService {
     @Override
     public List<com.vaadin.flow.component.html.Image> getAllThumbnails() {
         List<Image> images = imageRepo.findAll();
-        List<com.vaadin.flow.component.html.Image> vaadinImages = new ArrayList<>();
-        images.stream().forEach(e ->
-        {
-            vaadinImages.add(new com.vaadin.flow.component.html.Image(e.getThumbnailAddress(), e.getId().toString()));
-        });
-        return vaadinImages;
+        return getImages(images);
+    }
+
+    @Override
+    public List<com.vaadin.flow.component.html.Image> getAllThumbnailsById(Long id) {
+        List<Image> images = (List<Image>) imageRepo.findAllById(id);
+        return getImages(images);
     }
 
     @Override

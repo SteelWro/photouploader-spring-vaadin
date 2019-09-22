@@ -9,5 +9,6 @@ public interface ImageRepoService {
     String getThumbnailAddress(Long id);
     String getImageAddress(Long id);
     List<com.vaadin.flow.component.html.Image> getAllThumbnails();
+    List<com.vaadin.flow.component.html.Image> getAllThumbnailsById(Long id);
     void deletePhoto(Long id);
 }

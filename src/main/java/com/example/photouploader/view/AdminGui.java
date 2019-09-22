@@ -53,6 +53,7 @@ public class AdminGui extends VerticalLayout {
     private Map<Tab, Component> tabsToPages;
     private Button logoutButton;
     private HttpServletRequest req;
+    private Boolean isUploadRequested;
 
     @Autowired
     public AdminGui(ImageUploaderService imageUploaderService, ByteConverter byteConverter, UserRepoService userRepoService, ImageRepoService imageRepoService, HttpServletRequest req) {
@@ -74,6 +75,7 @@ public class AdminGui extends VerticalLayout {
         pagesShown = Stream.of(page1).collect(Collectors.toSet());
         tabsToPages = new HashMap<>();
         logoutButton = new Button("logout");
+        isUploadRequested = false;
 
         page1.add(upload);
         page2.add(gallery);
@@ -86,6 +88,7 @@ public class AdminGui extends VerticalLayout {
         upload.addSucceededListener(e -> {
             byteConverter.byteArrayToFile(buffer.getOutputBuffer(e.getFileName()), e);
             imageUploaderService.uploadFile(new File(e.getFileName()), userRepoService.getUserIdByUsername(authentication.getName()));
+            isUploadRequested = true;
         });
 
         logoutButton.addClickListener(e -> {
@@ -99,10 +102,13 @@ public class AdminGui extends VerticalLayout {
     }
 
     private void updateGallery() {
-        gallery.removeAll();
-        List<Image> images = imageRepoService.getAllThumbnails();
-        images.forEach(this::accept);
-        page2.add(gallery);
+        if(isUploadRequested) {
+            gallery.removeAll();
+            List<Image> images = imageRepoService.getAllThumbnails();
+            images.forEach(this::accept);
+            page2.add(gallery);
+            isUploadRequested = false;
+        }
     }
 
     private void deletePhoto(Optional<String> alt){
