@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 @PageTitle("Photo Cloud")
 @Secured(Role.USER)
 public class UserGui extends VerticalLayout {
-    public static final String ROUTE = "admin";
+    public static final String ROUTE = "user";
 
     private ImageUploaderService imageUploaderService;
     private ByteConverter byteConverter;
@@ -63,7 +63,7 @@ public class UserGui extends VerticalLayout {
         this.byteConverter = byteConverter;
         this.imageUploaderService = imageUploaderService;
         this.userRepoService = userRepoService;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        idLoggedUser = userRepoService.getUserIdByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
         Upload upload = new Upload(buffer);
         gallery = new Div();
@@ -88,7 +88,7 @@ public class UserGui extends VerticalLayout {
 
         upload.addSucceededListener(e -> {
             byteConverter.byteArrayToFile(buffer.getOutputBuffer(e.getFileName()), e);
-            imageUploaderService.uploadFile(new File(e.getFileName()), userRepoService.getUserIdByUsername(authentication.getName()));
+            imageUploaderService.uploadFile(new File(e.getFileName()), idLoggedUser);
             isUploadRequested = true;
         });
 
@@ -119,7 +119,8 @@ public class UserGui extends VerticalLayout {
 
     private void tabChanger() {
         if (tab1.isVisible()) {
-            updateGallery();
+
+            updateGallery(idLoggedUser);
         }
         pagesShown.forEach(page -> page.setVisible(false));
         pagesShown.clear();

@@ -50,7 +50,7 @@ public class ImageRepoServiceImpl implements ImageRepoService {
 
     @Override
     public List<com.vaadin.flow.component.html.Image> getAllThumbnailsById(Long id) {
-        List<Image> images = (List<Image>) imageRepo.findAllById(id);
+        List<Image> images = imageRepo.findAllByUserId(id);
         return getImages(images);
     }
 
