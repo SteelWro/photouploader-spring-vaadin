@@ -76,7 +76,7 @@ public class UserGui extends VerticalLayout {
         pagesShown = Stream.of(page1).collect(Collectors.toSet());
         tabsToPages = new HashMap<>();
         logoutButton = new Button("logout");
-        isUploadRequested = false;
+        isUploadRequested = true;
 
         page1.add(upload);
         page2.add(gallery);
