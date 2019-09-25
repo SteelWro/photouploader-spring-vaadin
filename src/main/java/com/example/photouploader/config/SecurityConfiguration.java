@@ -97,14 +97,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/frontend-es6/**");
     }
 
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder authBuilder) throws Exception {
-//        authBuilder.inMemoryAuthentication()
-//                .withUser("user").password("{noop}user").roles("USER")
-//                .and()
-//                .withUser("admin").password("{noop}admin").roles("USER", "ADMIN");
-//    }
-
     @Bean
     public AuthenticationManager customAuthenticationManager() throws Exception {
         return authenticationManager();
@@ -113,24 +105,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-//    @Bean
-//    public CustomRequestCache requestCache() {
-//        return new CustomRequestCache();
-//    }
-
-//    @Bean
-//    public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
-//        return new MyAuthenticationSuccessHandler();
-//    }
-
-    @EventListener(ApplicationReadyEvent.class)
-    public void get() {
-        User appUserUser = new User("jan", passwordEncoder().encode("jan"), Role.USER);
-        User appUserAdmin = new User("admin", passwordEncoder().encode("admin"), Role.ADMIN);
-        userRepo.save(appUserUser);
-        userRepo.save(appUserAdmin);
     }
 
 }

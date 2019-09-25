@@ -39,7 +39,7 @@ public class ImageRepoServiceImpl implements ImageRepoService {
 
     @Override
     public List<Image> getImagesById(Long id) {
-        return null;
+        return imageRepo.findAllByUserId(id);
     }
 
     @Override

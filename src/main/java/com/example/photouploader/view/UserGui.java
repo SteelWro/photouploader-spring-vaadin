@@ -1,5 +1,6 @@
 package com.example.photouploader.view;
 
+import com.example.photouploader.model.Image;
 import com.example.photouploader.repo.ImageRepo;
 import com.example.photouploader.model.Role;
 import com.example.photouploader.service.repo_service.ImageRepoService;
@@ -9,9 +10,8 @@ import com.example.photouploader.service.cloudinary_service.ImageUploaderService
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -22,7 +22,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -105,7 +104,7 @@ public class UserGui extends VerticalLayout {
     private void updateGallery(Long id) {
         if (isUploadRequested) {
             gallery.removeAll();
-            List<com.vaadin.flow.component.html.Image> images = imageRepoService.getAllThumbnailsById(id);
+            List<Image> images = imageRepoService.getImagesById(id);
             images.forEach(this::accept);
             page2.add(gallery);
             isUploadRequested = false;
@@ -129,81 +128,24 @@ public class UserGui extends VerticalLayout {
         pagesShown.add(selectedPage);
     }
 
-    private void accept(Image i) {
+    private void accept(Image image) {
         Button button = new Button("delete");
-        button.addClickListener(e -> {
-            deletePhoto(i.getAlt());
+        Dialog dialog = new Dialog();
+        com.vaadin.flow.component.html.Image vaadinImage = new com.vaadin.flow.component.html.Image(image.getThumbnailAddress(), image.getId().toString());
+
+        dialog.add(new com.vaadin.flow.component.html.Image(image.getImageAddress(), image.getId().toString()));
+        dialog.add(new Button("exit", event -> {
+            dialog.close();
+        }));
+
+        vaadinImage.addClickListener(e -> {
+            dialog.open();
         });
-        gallery.add(new HorizontalLayout(i, button));
+
+        button.addClickListener(event -> {
+            deletePhoto(vaadinImage.getAlt());
+        });
+
+        gallery.add(new HorizontalLayout(vaadinImage, button));
     }
 }
-//    public static final String ROUTE = "panel";
-//
-//    private ImageRepo imageRepo;
-//    private ImageUploaderService imageUploaderService;
-//    private ByteConverter byteConverter;
-//    private UserRepoService userRepoService;
-//    private Div gallery;
-//    private Div page2;
-//
-//    @Autowired
-//    public UserGui(ImageUploaderService imageUploaderService, ByteConverter byteConverter, UserRepoService userRepoService, ImageRepo imageRepo) {
-//        this.byteConverter = byteConverter;
-//        this.imageUploaderService = imageUploaderService;
-//        this.userRepoService = userRepoService;
-//        this.imageRepo = imageRepo;
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
-//        Upload upload = new Upload(buffer);
-//        gallery = new Div();
-//        page2 = new Div();
-//
-//        upload.addSucceededListener(event -> {
-//            byteConverter.byteArrayToFile(buffer.getOutputBuffer(event.getFileName()), event);
-//            imageUploaderService.uploadFile(new File(event.getFileName()), userRepoService.getUserIdByUsername(authentication.getName()));
-//        });
-//
-//        Tab tab1 = new Tab("Upload");
-//        Div page1 = new Div();
-//        page1.add(new Label("User Page in works"));
-//
-//        Tab tab2 = new Tab("Gallery");
-//        page2.add(new Label("User Page in works"));
-//        page2.setVisible(false);
-//
-//        Map<Tab, Component> tabsToPages = new HashMap<>();
-//        tabsToPages.put(tab1, page1);
-//        tabsToPages.put(tab2, page2);
-//
-//        Tabs tabs = new Tabs(tab1, tab2);
-//        Div pages = new Div(page1, page2);
-//        Set<Component> pagesShown = Stream.of(page1)
-//                .collect(Collectors.toSet());
-//
-//        tabs.addSelectedChangeListener(event -> {
-//            updateGallery();
-//            pagesShown.forEach(page -> page.setVisible(false));
-//            pagesShown.clear();
-//            Component selectedPage = tabsToPages.get(tabs.getSelectedTab());
-//            selectedPage.setVisible(true);
-//            page2.add(gallery);
-//            pagesShown.add(selectedPage);
-//
-//        });
-//
-//        add(tabs, pages);
-//    }
-//
-//    public void updateGallery() {
-//        gallery.removeAll();
-//        List<Image> images = imageRepo.findAll();
-//        List<com.vaadin.flow.component.html.Image> vaadinImages = new ArrayList<>();
-//        images.stream().forEach(element ->
-//        {
-//            vaadinImages.add(new com.vaadin.flow.component.html.Image(element.getImageAddress(), "cloudinaryPhoto"));
-//        });
-//        for (int i = 0; i < vaadinImages.size(); i++) {
-//            gallery.add(vaadinImages.get(i));
-//        }
-//    }
-
