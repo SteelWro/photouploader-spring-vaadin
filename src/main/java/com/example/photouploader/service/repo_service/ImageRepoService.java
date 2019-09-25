@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface ImageRepoService {
     void saveImage(Image image);
+    List<Image> getAllImages();
+    List<Image> getImagesById(Long id);
     String getThumbnailAddress(Long id);
     String getImageAddress(Long id);
     List<com.vaadin.flow.component.html.Image> getAllThumbnails();

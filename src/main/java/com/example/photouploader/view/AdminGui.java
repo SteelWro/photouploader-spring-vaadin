@@ -1,5 +1,6 @@
 package com.example.photouploader.view;
 
+import com.example.photouploader.model.Image;
 import com.example.photouploader.model.Role;
 import com.example.photouploader.service.cloudinary_service.ByteConverter;
 import com.example.photouploader.service.cloudinary_service.ImageUploaderService;
@@ -8,9 +9,9 @@ import com.example.photouploader.service.repo_service.UserRepoService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
@@ -26,8 +27,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
+import java.awt.*;
 import java.io.File;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -102,22 +105,23 @@ public class AdminGui extends VerticalLayout {
     }
 
     private void updateGallery() {
-        if(isUploadRequested) {
+        if (isUploadRequested) {
             gallery.removeAll();
-            List<Image> images = imageRepoService.getAllThumbnails();
+            List<com.example.photouploader.model.Image> images = imageRepoService.getAllImages();
             images.forEach(this::accept);
             page2.add(gallery);
             isUploadRequested = false;
         }
     }
 
-    private void deletePhoto(Optional<String> alt){
+    private void deletePhoto(Optional<String> alt) {
+        isUploadRequested = true;
         imageRepoService.deletePhoto(Long.valueOf(alt.get()));
         updateGallery();
     }
 
-    private void tabChanger(){
-        if(tab1.isVisible()) {
+    private void tabChanger() {
+        if (tab1.isVisible()) {
             updateGallery();
         }
         pagesShown.forEach(page -> page.setVisible(false));
@@ -127,13 +131,29 @@ public class AdminGui extends VerticalLayout {
         pagesShown.add(selectedPage);
     }
 
-    private void accept(Image i) {
+    private void accept(Image image) {
         Button button = new Button("delete");
-        button.addClickListener(e -> {
-            deletePhoto(i.getAlt());
+        Dialog dialog = new Dialog();
+        com.vaadin.flow.component.html.Image vaadinImage = new com.vaadin.flow.component.html.Image(image.getThumbnailAddress(), image.getId().toString());
+
+        dialog.add(new com.vaadin.flow.component.html.Image(image.getImageAddress(), image.getId().toString()));
+        dialog.add(new Button("exit", event -> {
+            dialog.close();
+        }));
+
+        vaadinImage.addClickListener(e -> {
+            dialog.open();
         });
-        gallery.add(new HorizontalLayout(i, button));
+
+        button.addClickListener(event -> {
+            deletePhoto(vaadinImage.getAlt());
+        });
+
+        gallery.add(new HorizontalLayout(vaadinImage, button));
     }
+
 }
+
+
 
 
