@@ -4,8 +4,10 @@ Moja implementacja chmury na zdjęcia przy wykorzystaniu API dla serwisu https:/
 aplikacja dostępna publicznie na platformie Heroku
 https://photouploader-cloudinary.herokuapp.com/
 (aplikacja po 30 minutach nieaktywności wyłącza się więc potrzeba więcej czasu na uruchomienie)
+
 login: admin
 hasło: admin
+
 (Można utworzyć własnego użytkownika lecz admin widzi wszystkie zdjęcia w chmurze)
 
 
